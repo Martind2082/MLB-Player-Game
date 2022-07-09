@@ -3,20 +3,46 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible"content="IE=edge">
-        <title>Wardle</title>
+        <title>MLB Game</title>
         <meta name="viewport"content="width=device-width,initial-scale=1">
         <link rel="stylesheet"type="text/css"media="screen"href="index.css">
         <script src="index.js" defer></script>
    </head>
     <body>
-        <h1>MLB Wardle</h1>
+        <header>
+            <img class="headerchild" src="https://img.mlbstatic.com/mlb-images/image/private/mlb/uair0o6p1rz8n54p3p6x.jpg">
+            <div class="headerchild" style="display: flex; flex-direction: column;">Inspired by <a href="https://mlbpickle.com/" target="_blank"> Wardle/MLB Pickle</a></div>
+            <a href="https://www.mlb.com" target="_blank"><img class="headerchild" style="flex: 0.5" src="https://builds.mlbstatic.com/mlb.com/builds/site-core/1606751303311/dist/images/favicon.png"></a>
+        </header>
+        <h1>MLB Player Guessing Game</h1>
         <div id="main">
-            <div id="answerarea">
-                <img href="https://www.pngmart.com/files/1/Baseball-Bat-Transparent-Background.png">
-                <input type="text">
+            <button id="stopspin">Stop Spin</button>
+            <div id="left">
+                <div id="answerarea">
+                    <img id="baseball" class="baseball" src="https://www.freeiconspng.com/thumbs/baseball-png/baseball-png-12.png">
+                    <input placeholder="type in answer here" type="text">
+                </div>
+                <div id="options"></div>
             </div>
-            <div id="options"></div>
+            <div id="right">
+                <div id="hint">
+                    stuck bru? u need a hint? click to see player's face
+                    <button id="facereveal" class="button">Reveal face</button>
+                </div>
+                <img id="face">
+            </div>
         </div>
+        <div id="data">
+            <div id="name_display_first_last" class="datainfo">Name</div>
+            <div id="team_abbrev" class="datainfo">Team</div>
+            <div id="league" class="datainfo">Lg./Div.</div>
+            <div id="bats" class="datainfo">B</div>
+            <div id="throws" class="datainfo">T</div>
+            <div id="birth_country" class="datainfo">Born</div>
+            <div id="age" class="datainfo">Age</div>
+            <div id="position" class="datainfo">Position</div>
+            <div id="weight" class="datainfo" style="border-right: none">Weight</div>
+        </div>
+        <button id="giveup">Give up</button>
     </body>
 </html>
-
