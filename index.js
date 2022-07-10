@@ -14,11 +14,12 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 today = mm + '/' + dd + '/' + yyyy;
 
+let correct = false;
 //real person's data
 let real;
-//player's birth
+//real player's birth
 let birth;
-//data of the athlete the player guesses
+//data of person guessed
 let guessdata;
 //gets birth in mm/dd//yyyy
 function getplayerbirth(date) {
@@ -42,7 +43,7 @@ const teams = {
 
 
 //get league
-function getteam(team) {
+function getleague(team) {
     let index = Object.keys(teams).find(key => teams[key].includes(team));
     return leagues[index];
 }
@@ -56,19 +57,33 @@ function getage(today, birthday) {
 
 function exception(id) {
     if (id === 'league') {
-        let realteam = getteam(real.team_abbrev);
-        let guessteam = getteam(guessdata.team_abbrev);
-        console.log(realteam, guessteam);
+        let realleague = getleague(real.team_abbrev);
+        let guessleague = getleague(guessdata.team_abbrev);
         let div = document.createElement('div');
         div.classList.add('guess');
-        div.textContent = guessteam;
-        if (realteam === guessteam) {
+        div.textContent = guessleague;
+        if (realleague === guessleague) {
             div.style.background = '#1cfc03';
+        } else if (realleague.split(' ')[0] === guessleague.split(' ')[0] || realleague.split(' ')[1] === guessleague.split(' ')[1]) {
+            div.style.background = '#f2ca44';
+        }
+         else {
+            div.style.background = 'gray';
+        }
+        data.append(div);
+    } else if (id === 'bats' || id === 'throws') {
+        let div = document.createElement('div');
+        div.classList.add('guess');
+        div.textContent = guessdata[id];
+        if (guessdata[id] === real[id]) {
+            div.style.background = '#1cfc03';
+        } else if (real[id] === 'S' || real[id] === 'B') {
+            div.style.background = '#f2ca44';
         } else {
             div.style.background = 'gray';
         }
         data.append(div);
-    } else {
+    } else if (id === 'age') {
         let guessdate = getplayerbirth(guessdata.birth_date);
         let div = document.createElement('div');
         div.classList.add('guess');
@@ -77,6 +92,21 @@ function exception(id) {
         div.textContent = guessage;
         if (realage === guessage) {
             div.style.background = '#1cfc03';
+        } else if (guessage < realage + 3 || guessage > realage - 3) {
+            div.style.background = '#f2ca44';
+        }
+         else {
+            div.style.background = 'gray';
+        }
+        data.append(div);
+    } else if (id === 'weight') {
+        let div = document.createElement('div');
+        div.classList.add('guess');
+        div.textContent = guessdata.weight;
+        if (guessdata.weight === real.weight) {
+            div.style.background = '#1cfc03';
+        } else if (guessdata.weight < real.weight + 10 || guessdata.weight > real.weight - 10) {
+            div.style.background = '#f2ca44';
         } else {
             div.style.background = 'gray';
         }
@@ -87,25 +117,40 @@ function exception(id) {
 //when player guesses
 function guess(athlete) {
     async function guessplayer() {
+        //array is the 3 words of athlete's name. After splice, array = 3rd word aka index 2
+        let array = athlete.split(' ');
+        let test = array.splice(0, 2).join(' ');
+        if (test === 'Will Smith' || test === 'Diego Castillo') {
+            let response = await fetch(`http://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${test}%25'`);
+            let data = await response.json();
+            data = data.search_player_all.queryResults.row;
+            if (data[0].team_abbrev === array.join('')) {
+                guessdata = data[0];
+                return guessdata;
+            } else {
+                guessdata = data[1];
+                return guessdata;
+            }
+        }
         let response = await fetch(`http://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${athlete}%25'`);
         let data = await response.json();
-        return data;
+        //data of person guessed
+        guessdata = data.search_player_all.queryResults.row;
+        return guessdata;
     }
     guessplayer()
-        .then(data => {
-            guessdata = data.search_player_all.queryResults.row;
-            console.log('guessdata', guessdata);
-        })
-        .then(() => {
+        .then(guessdata => {
             for (let i = 0; i < 9; i++) {
-                if (i === 2 || i === 6) {
+                if (i === 2 || i === 3 || i === 4 || i === 8 || i === 6) {
                     exception(data.children[i].id);
                     continue;
                 }
                 let div = document.createElement('div');
                 div.textContent = guessdata[data.children[i].id];
                 div.classList.add('guess');
-                if (div.textContent === real[data.children[i].id]) {
+                if (i === 0 && correct === false) {
+                    div.style.background = 'white';
+                } else if (div.textContent === real[data.children[i].id]) {
                     div.style.background = '#1cfc03';
                 } else {
                     div.style.background = 'gray';
@@ -130,11 +175,7 @@ getPlayer()
         data = data.search_player_all.queryResults.row[Math.floor(Math.random() * data.search_player_all.queryResults.row.length)];
         real = data;
         person = data.name_display_first_last;
-        date = data.birth_date.split('');
-        date.splice(10);
-        date = date.join('').split('-');
-        date = [`${date[1]}/${date[2]}/${[date[0]]}`].join('');
-        birth = date;
+        birth = getplayerbirth(data.birth_date);
         face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${data.player_id}/headshot/67/current`;
     })
     .catch(error => console.log(error));
@@ -157,7 +198,6 @@ function clearOptions() {
 
 //fetches data and generates player
 input.addEventListener('input', () => {
-    clearOptions();
     let answer = input.value;
     //if nothing in input box
     if (answer === '') {
@@ -172,22 +212,24 @@ input.addEventListener('input', () => {
     }
     getMLB()
         .then(data => {
+            clearOptions();
             info = data.search_player_all.queryResults.row;
-            //if info/data is an object with length > 1
-            if (typeof info === 'object' && info.length !== undefined) {
-                info.splice(10);
-            }
         })
         .then(() => {
             //list of players appears
             options.style.display = 'block';
             //if info/data is an object with length > 1
             if (typeof info === 'object' && info.length !== undefined) {
+                info.splice(10);
                 let i = info.length - 1;
                 while (i >= 0) {
                     let div = document.createElement('div');
                     div.classList.add('option');
-                    div.textContent = info[i].name_display_first_last;
+                    if (info[i].name_display_first_last === 'Diego Castillo' || info[i].name_display_first_last === 'Will Smith') {
+                        div.textContent = info[i].name_display_first_last + ' ' + info[i].team_abbrev;
+                    } else {
+                        div.textContent = info[i].name_display_first_last;
+                    }
                     options.append(div);
                     i--;
                 }
@@ -199,9 +241,9 @@ input.addEventListener('input', () => {
             //info/data must not be undefined or have length, so there is only 1 object
             else {
                 let div = document.createElement('div');
-                options.append(div);
                 div.classList.add('option');
                 div.textContent = info.name_display_first_last;
+                options.append(div);
             }
         })
         .then(() => {
@@ -209,30 +251,25 @@ input.addEventListener('input', () => {
             document.querySelectorAll('.option').forEach(val => {
                 val.addEventListener('click', (e) => {
                     if (e.target.textContent === person) {
+                        correct = true;
                         let div = document.createElement('div');
                         div.classList.add('congrats');
                         div.innerHTML = `<p style="margin-bottom: 1%">Congratulations!</p><img style="width: 60%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
                         document.body.append(div);
-                        div.onclick = function() {
-                            div.remove();
-                        }
+                        document.getElementById('again').addEventListener('click', () => {
+                            location.reload();
+                        })
                     }
-                    guess(val.textContent);
                     options.style.display = 'none';
                     clearOptions();
+                    guess(val.textContent);
                 })
-            })
-        })
-        .then(() => {
-            document.getElementById('again').addEventListener('click', () => {
-                location.reload();
             })
         })
         .catch((error) => console.log(error));
 });
 
 document.getElementById('giveup').addEventListener('click', () => {
-    console.log('give up');
     let div = document.createElement('div');
     div.classList.add('congrats');
     div.innerHTML = `<p style="margin-bottom: 1%">Player was ${real.name_display_first_last}!</p><img style="width: 60%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
@@ -243,18 +280,4 @@ document.getElementById('giveup').addEventListener('click', () => {
     document.getElementById('again').addEventListener('click', () => {
         location.reload();
     })
-})
-
-let spin = true;
-let stopspin = document.getElementById('stopspin');
-stopspin.addEventListener('click', () => {
-    if (spin === true) {
-        spin = false;
-        document.getElementById('baseball').classList.remove('baseball');
-        stopspin.textContent = 'Spin';
-    } else {
-        spin = true;
-        document.getElementById('baseball').classList.add('baseball');
-        stopspin.textContent = 'Stop Spin'
-    }
 })

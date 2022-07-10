@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&family=Space+Mono&display=swap');
+* {
+    font-family: 'Quicksand';
+}
 body {
     margin: 0;
     background-color: rgb(198, 222, 243);
@@ -35,22 +39,20 @@ a {
     width: 100%;
     height: 60vh;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
-#left {
+#right {
     width: 50%;
+    height: 100%;
     display: flex;
     justify-content: center;
 }
-#right {
-    width: 20%;
-    height: 100%;
-}
 #options {
     position: absolute;
+    top: 60%;
+    left: 25%;
     width: 20%;
-    top: 50%;
     text-align: center;
     border-radius: 30px;
     border: 2px solid black;
@@ -68,21 +70,25 @@ a {
 }
 #answerarea {
     top: 5%;
-    width: 33%;
-    height: 100%;
-    position: absolute;
+    width: 50%;
+    height: 50%;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: end;
 }
 
 input {
     border-radius: 20px;
-    padding: 3% 3%;
     opacity: 1;
-    border: none;
-    position: absolute;
-    top: 50%;
-    background-color: rgba(230, 135, 114, 0.791);
+    border: 2px solid black;
+    padding-left: 5%;
+    padding-right: 5%;
+    width: 50%;
+    height: 25%;
+    top: 40%;
+    left: 40%;
+    background-color: white;
+    text-align: center;
 }
 ::placeholder {
     color: black;
@@ -96,7 +102,7 @@ img {
 #hint {
     background-color: rgb(51, 134, 222);
     height: 100%;
-    width: 100%;
+    width: 50%;
     font-size: 2rem;
     display: flex;
     flex-direction: column;
@@ -120,6 +126,7 @@ button:hover {
 }
 #face {
     display: none;
+    width: 50%;
 }
 
 #data {
@@ -128,7 +135,7 @@ button:hover {
     display: grid;
     grid-template-columns: 20% 10% 15% 5% 5% 15% 10% 10% 1fr;
     grid-auto-rows: 15vh;
-    font-size: 2rem;
+    font-size: 1.3rem;
     color: white;
     background-color: rgb(45, 39, 39);
 }
@@ -158,7 +165,7 @@ button:hover {
     box-sizing: border-box;
     border-left: 2px solid white;
     border-bottom: 2px solid white;
-    color: white;
+    color: black;
 }
 
 #giveup {
@@ -170,25 +177,47 @@ button:hover {
     border-radius: 20px;
     padding: 5px 10px;
 }
-.baseball {
-    animation: spin 2s linear infinite;
-    width: 100%;
-    height: 100%;
-}
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-#stopspin {
-    background-color: rgb(105, 105, 236);
-    padding: 5px 10px;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    border-radius: 20px;
-}
 
+
+@media (max-width: 840px) {
+    #datacontainer {
+        overflow: auto;
+    }
+    #data {
+        font-size: 1rem;
+        min-width: 800px;
+        overflow: auto;
+    }
+    #logo {
+        display: none;
+    }
+    header {
+        width: 100%;
+    }
+    h1 {
+        text-align: center;
+    }
+    #credits {
+        position: absolute;
+        text-align: center;
+        left: 15%;
+        top: 20%;
+    }
+    #main {
+        flex-direction: column-reverse;
+    }
+    #hint {
+        width: 100%;
+    }
+    #face {
+        width: 100%;
+    }
+    #answerarea {
+        width: 100%;
+        justify-content: center;
+    }
+    #options {
+        width: 50%;
+        top: 90%;
+    }
+}
