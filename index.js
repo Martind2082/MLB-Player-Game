@@ -121,7 +121,7 @@ function guess(athlete) {
         let array = athlete.split(' ');
         let test = array.splice(0, 2).join(' ');
         if (test === 'Will Smith' || test === 'Diego Castillo') {
-            let response = await fetch(`http://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${test}%25'`);
+            let response = await fetch(`https://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${test}%25'`);
             let data = await response.json();
             data = data.search_player_all.queryResults.row;
             if (data[0].team_abbrev === array.join('')) {
@@ -132,7 +132,7 @@ function guess(athlete) {
                 return guessdata;
             }
         }
-        let response = await fetch(`http://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${athlete}%25'`);
+        let response = await fetch(`https://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${athlete}%25'`);
         let data = await response.json();
         //data of person guessed
         guessdata = data.search_player_all.queryResults.row;
@@ -166,7 +166,7 @@ let person;
 let abc = 'abcdefghijklmnopqrstuvwxyz';
 let randomletter = abc[Math.floor(Math.random() * 26)];
 async function getPlayer() {
-    let response = await fetch(`http://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${randomletter}%25'`);
+    let response = await fetch(`https://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${randomletter}%25'`);
     let data = await response.json();
     return data;
 }
@@ -206,7 +206,7 @@ input.addEventListener('input', () => {
     }
 
         async function getMLB() {
-        let response = await fetch(`http://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${answer}%25'`);
+        let response = await fetch(`https://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${answer}%25'`);
         let data = await response.json();
         return data;
     }
