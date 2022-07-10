@@ -180,9 +180,6 @@ button:hover {
 
 
 @media (orientation: portrait) {
-    body {
-        min-height: 600px;
-    }
     #datacontainer {
         overflow: auto;
     }
