@@ -3,11 +3,12 @@
     font-family: 'Quicksand';
 }
 body {
+    position: relative;
     margin: 0;
     background-color: rgb(198, 222, 243);
     height: 150vh;
 }
-h1 {
+#h1desktop {
     position: absolute;
     left: 5%;
     top: 1vh;
@@ -18,6 +19,11 @@ header {
     height: 40vh;
     display: flex;
     background-color: black;
+}
+#credits {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 .headerchild {
     flex: 1;
@@ -178,8 +184,27 @@ button:hover {
     padding: 5px 10px;
 }
 
+#mobileheader {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 40vh;
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: white;
+}
+#mobileheader div {
+    font-size: 1.5rem;
+}
 
 @media (max-width: 1000px) {
+    #mobileheader {
+        display: flex;
+    }
     #datacontainer {
         overflow: auto;
     }
@@ -188,20 +213,14 @@ button:hover {
         min-width: 800px;
         overflow: auto;
     }
-    #logo {
+    #logo, #h1desktop {
         display: none;
     }
     header {
         width: 100%;
     }
-    h1 {
-        text-align: center;
-    }
     #credits {
-        position: absolute;
-        text-align: center;
-        left: 15%;
-        top: 20%;
+        display: none;
     }
     #main {
         flex-direction: column-reverse;
