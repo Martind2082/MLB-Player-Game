@@ -272,7 +272,7 @@ input.addEventListener('input', () => {
 document.getElementById('giveup').addEventListener('click', () => {
     let div = document.createElement('div');
     div.classList.add('congrats');
-    div.innerHTML = `<p style="margin-bottom: 1%">Player was ${real.name_display_first_last}!</p><img style="width: 60%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
+    div.innerHTML = `<p style="margin-bottom: 1%; text-align: center;">Player was ${real.name_display_first_last}!</p><img style="width: 60%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
     document.body.append(div);
     div.onclick = function() {
         div.remove();

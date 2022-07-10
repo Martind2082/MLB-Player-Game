@@ -179,7 +179,7 @@ button:hover {
 }
 
 
-@media (orientation: portrait) {
+@media (max-width: 1000px) {
     #datacontainer {
         overflow: auto;
     }
@@ -219,5 +219,8 @@ button:hover {
     #options {
         width: 50%;
         top: 90%;
+    }
+    .congrats {
+        width: 80%;
     }
 }
