@@ -264,6 +264,7 @@ input.addEventListener('input', () => {
                             location.reload();
                         })
                     }
+                    input.value = '';
                     options.style.display = 'none';
                     clearOptions();
                     guess(val.textContent);
