@@ -7,6 +7,7 @@ let face = document.getElementById('face');
 let facereveal = document.getElementById('facereveal');
 let data = document.getElementById('data');
 
+
 //todays date
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
@@ -14,6 +15,9 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 today = mm + '/' + dd + '/' + yyyy;
 
+//if user gave up
+let gaveup = false;
+//if user got the answer correct
 let correct = false;
 //real person's data
 let real;
@@ -92,7 +96,7 @@ function exception(id) {
         div.textContent = guessage;
         if (realage === guessage) {
             div.style.background = '#1cfc03';
-        } else if (guessage < realage + 3 || guessage > realage - 3) {
+        } else if (guessage < realage + 3 && guessage > realage - 3) {
             div.style.background = '#f2ca44';
         }
          else {
@@ -105,7 +109,7 @@ function exception(id) {
         div.textContent = guessdata.weight;
         if (guessdata.weight === real.weight) {
             div.style.background = '#1cfc03';
-        } else if (guessdata.weight < real.weight + 10 || guessdata.weight > real.weight - 10) {
+        } else if (guessdata.weight < real.weight - -10 && guessdata.weight > real.weight - 10) {
             div.style.background = '#f2ca44';
         } else {
             div.style.background = 'gray';
@@ -270,9 +274,13 @@ input.addEventListener('input', () => {
 });
 
 document.getElementById('giveup').addEventListener('click', () => {
+    if (gaveup === true) {
+        return;
+    }
+    gaveup = true;
     let div = document.createElement('div');
     div.classList.add('congrats');
-    div.innerHTML = `<p style="margin-bottom: 1%; text-align: center;">Player was ${real.name_display_first_last}!</p><img style="width: 60%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
+    div.innerHTML = `<p style="margin-bottom: 1%; text-align: center;">Player was ${real.name_display_first_last}!</p><img style="width: 70%; height: 60%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
     document.body.append(div);
     div.onclick = function() {
         div.remove();

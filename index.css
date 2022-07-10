@@ -6,7 +6,6 @@ body {
     position: relative;
     margin: 0;
     background-color: rgb(198, 222, 243);
-    height: 150vh;
 }
 #h1desktop {
     position: absolute;
@@ -176,7 +175,7 @@ button:hover {
 
 #giveup {
     display: block;
-    margin: auto; 
+    margin: 15px auto 50px; 
     background-color: red; 
     font-size: 1.5rem; 
     border: none;
@@ -202,11 +201,16 @@ button:hover {
 }
 
 @media (max-width: 1000px) {
+    header {
+        height: 250px;
+    }
     #mobileheader {
         display: flex;
+        height: 250px;
     }
     #datacontainer {
         overflow: auto;
+        height: 150px;
     }
     #data {
         font-size: 1rem;
@@ -224,12 +228,15 @@ button:hover {
     }
     #main {
         flex-direction: column-reverse;
+        height: 400px;
     }
     #hint {
         width: 100%;
+        height: 100%;
     }
     #face {
         width: 100%;
+        height: 100%;
     }
     #answerarea {
         width: 100%;
