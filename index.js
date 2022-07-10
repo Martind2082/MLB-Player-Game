@@ -72,7 +72,7 @@ function exception(id) {
             div.style.background = '#f2ca44';
         }
          else {
-            div.style.background = 'gray';
+            div.style.background = '#b3bdb6';
         }
         data.append(div);
     } else if (id === 'bats' || id === 'throws') {
@@ -84,7 +84,7 @@ function exception(id) {
         } else if (real[id] === 'S' || real[id] === 'B') {
             div.style.background = '#f2ca44';
         } else {
-            div.style.background = 'gray';
+            div.style.background = '#b3bdb6';
         }
         data.append(div);
     } else if (id === 'age') {
@@ -100,7 +100,7 @@ function exception(id) {
             div.style.background = '#f2ca44';
         }
          else {
-            div.style.background = 'gray';
+            div.style.background = '#b3bdb6';
         }
         data.append(div);
     } else if (id === 'weight') {
@@ -112,7 +112,7 @@ function exception(id) {
         } else if (guessdata.weight < real.weight - -10 && guessdata.weight > real.weight - 10) {
             div.style.background = '#f2ca44';
         } else {
-            div.style.background = 'gray';
+            div.style.background = '#b3bdb6';
         }
         data.append(div);
     }
@@ -157,7 +157,7 @@ function guess(athlete) {
                 } else if (div.textContent === real[data.children[i].id]) {
                     div.style.background = '#1cfc03';
                 } else {
-                    div.style.background = 'gray';
+                    div.style.background = '#b3bdb6';
                 }
                 data.append(div);
             }
@@ -258,7 +258,7 @@ input.addEventListener('input', () => {
                         correct = true;
                         let div = document.createElement('div');
                         div.classList.add('congrats');
-                        div.innerHTML = `<p style="margin-bottom: 1%">Congratulations!</p><img style="width: 60%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
+                        div.innerHTML = `<p style="margin-bottom: 1%">Congratulations!</p><img style="width: 70%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
                         document.body.append(div);
                         document.getElementById('again').addEventListener('click', () => {
                             location.reload();
@@ -283,6 +283,7 @@ document.getElementById('giveup').addEventListener('click', () => {
     div.innerHTML = `<p style="margin-bottom: 1%; text-align: center;">Player was ${real.name_display_first_last}!</p><img style="width: 70%; height: 60%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
     document.body.append(div);
     div.onclick = function() {
+        gaveup = false;
         div.remove();
     }
     document.getElementById('again').addEventListener('click', () => {
