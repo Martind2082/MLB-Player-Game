@@ -15,8 +15,6 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 today = mm + '/' + dd + '/' + yyyy;
 
-//if user gave up
-let gaveup = false;
 //if user got the answer correct
 let correct = false;
 //real person's data
@@ -275,16 +273,14 @@ input.addEventListener('input', () => {
 });
 
 document.getElementById('giveup').addEventListener('click', () => {
-    if (gaveup === true) {
-        return;
+    if (document.body.children[document.body.children.length - 1].classList.contains('congrats')) {
+        document.body.children[document.body.children.length - 1].remove(); 
     }
-    gaveup = true;
     let div = document.createElement('div');
     div.classList.add('congrats');
     div.innerHTML = `<p style="margin-bottom: 1%; text-align: center;">Player was ${real.name_display_first_last}!</p><img style="width: 70%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
     document.body.append(div);
     div.onclick = function() {
-        gaveup = false;
         div.remove();
     }
     document.getElementById('again').addEventListener('click', () => {
