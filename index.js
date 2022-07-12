@@ -157,7 +157,6 @@ function guess(athlete) {
     guessplayer()
         .then(guessdata => {
             let nless = data.children.length - 9;
-            console.log('nless', nless)
             for (let i = nless; i < nless + 9; i++) {
                 data.children[nless].remove();
             }
@@ -194,14 +193,16 @@ async function getPlayer() {
     person = data.name_display_first_last;
     birth = getplayerbirth(data.birth_date);
 }
-do {
-    getPlayer();
-} while (getage(today, birth) < 50);
-getPlayer()
-    .then(() => {
-        face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${data.player_id}/headshot/67/current`;
-    })
-    .catch(error => console.log(error));
+const interval = setInterval(() => {
+    getPlayer()
+        .then(() => {
+            if (getage(today, birth) < 50) {
+                clearInterval(interval);
+            }
+            face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${real.player_id}/headshot/67/current`;
+        })
+        .catch(error => console.log(error));
+}, 100)
 
 //when user presses hint
 facereveal.addEventListener('click', () => {
