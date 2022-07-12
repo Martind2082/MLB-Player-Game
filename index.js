@@ -7,7 +7,6 @@ let face = document.getElementById('face');
 let facereveal = document.getElementById('facereveal');
 let data = document.getElementById('data');
 
-
 //todays date
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
@@ -37,7 +36,7 @@ const leagues = ['AL West', 'AL Central', 'AL East', 'NL West', 'NL Central', 'N
 const teams = {
     0: ['HOU', 'LAA', 'OAK', 'SEA', 'TEX'],
     1: ['CWS', 'CLE', 'MIN', 'DET', 'KC'],
-    2: ['NYY', 'BOS', 'TB', 'BAL'],
+    2: ['NYY', 'BOS', 'TOR', 'BAL'],
     3: ['LAD', 'SF', 'SD', 'ARI', 'COL'],
     4: ['MIL', 'CHC', 'STL', 'CIN', 'PIT'],
     5: ['NYM', 'ATL', 'PHI', 'MIA', 'WSH', 'MTL']
@@ -118,6 +117,21 @@ function exception(id) {
 
 //when player guesses
 function guess(athlete) {
+    for (let i = 0; i < 9; i++) {
+        let div = document.createElement('div');
+        if (i === 0) {
+            div.style.background = 'white';
+        } else {
+            div.style.background = '#b3bdb6';
+        }
+        let inner = document.createElement('div');
+        inner.style.marginTop = '10%';
+        inner.style.width = '80%';
+        inner.style.height = '20%';
+        inner.style.background = 'gray';
+        div.append(inner);
+        data.append(div);
+    }
     async function guessplayer() {
         //array is the 3 words of athlete's name. After splice, array = 3rd word aka index 2
         let array = athlete.split(' ');
@@ -142,6 +156,11 @@ function guess(athlete) {
     }
     guessplayer()
         .then(guessdata => {
+            let nless = data.children.length - 9;
+            console.log('nless', nless)
+            for (let i = nless; i < nless + 9; i++) {
+                data.children[nless].remove();
+            }
             for (let i = 0; i < 9; i++) {
                 if (i === 2 || i === 3 || i === 4 || i === 8 || i === 6) {
                     exception(data.children[i].id);
@@ -170,14 +189,16 @@ let randomletter = abc[Math.floor(Math.random() * 26)];
 async function getPlayer() {
     let response = await fetch(`https://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${randomletter}%25'`);
     let data = await response.json();
-    return data;
+    data = data.search_player_all.queryResults.row[Math.floor(Math.random() * data.search_player_all.queryResults.row.length)];
+    real = data;
+    person = data.name_display_first_last;
+    birth = getplayerbirth(data.birth_date);
 }
+do {
+    getPlayer();
+} while (getage(today, birth) < 50);
 getPlayer()
-    .then(data => {
-        data = data.search_player_all.queryResults.row[Math.floor(Math.random() * data.search_player_all.queryResults.row.length)];
-        real = data;
-        person = data.name_display_first_last;
-        birth = getplayerbirth(data.birth_date);
+    .then(() => {
         face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${data.player_id}/headshot/67/current`;
     })
     .catch(error => console.log(error));
