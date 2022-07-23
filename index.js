@@ -36,7 +36,7 @@ const leagues = ['AL West', 'AL Central', 'AL East', 'NL West', 'NL Central', 'N
 const teams = {
     0: ['HOU', 'LAA', 'OAK', 'SEA', 'TEX'],
     1: ['CWS', 'CLE', 'MIN', 'DET', 'KC'],
-    2: ['NYY', 'BOS', 'TOR', 'BAL'],
+    2: ['NYY', 'BOS', 'TOR', 'BAL', 'TB'],
     3: ['LAD', 'SF', 'SD', 'ARI', 'COL'],
     4: ['MIL', 'CHC', 'STL', 'CIN', 'PIT'],
     5: ['NYM', 'ATL', 'PHI', 'MIA', 'WSH', 'MTL']
