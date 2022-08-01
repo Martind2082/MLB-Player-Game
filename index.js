@@ -7,6 +7,38 @@ let face = document.getElementById('face');
 let facereveal = document.getElementById('facereveal');
 let data = document.getElementById('data');
 
+const stats = document.querySelector('.stats');
+const statistics = document.querySelector('.statistics');
+stats.addEventListener('click', () => {
+    statistics.classList.toggle('flex');
+})
+const xmark = document.querySelector('.xmark');
+xmark.addEventListener('click', () => {
+    statistics.classList.remove('flex');
+})
+const reset = document.getElementById('reset');
+reset.addEventListener('click', () => {
+    wins.textContent = 0;
+    total.textContent = 0;
+    localStorage.setItem('correct', 0);
+    localStorage.setItem('attempted', 0);
+    win_rate.textContent = 0 + '%';
+})
+const wins = document.getElementById('wins');
+const total = document.getElementById('total');
+const win_rate = document.getElementById('win_rate');
+wins.textContent = localStorage.getItem('correct');
+total.textContent = localStorage.getItem('attempted');
+function winrate() {
+    if (isNaN(parseInt(localStorage.getItem('correct')) / parseInt(localStorage.getItem('attempted')))) {
+        return 0;
+    } else {
+        return ((parseInt(localStorage.getItem('correct')) / parseInt(localStorage.getItem('attempted')) * 100)).toString().slice(0, 5) + '%';
+    }
+}
+win_rate.textContent = winrate();
+
+
 //todays date
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
@@ -14,8 +46,33 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 today = mm + '/' + dd + '/' + yyyy;
 
+//total amount of games played
+if (localStorage.getItem('attempted') === null) {
+    localStorage.setItem('attempted', 1);
+}
+//total amount of correct guesses
+if (localStorage.getItem('correct') === null) {
+    localStorage.setItem('correct', 0);
+}
 //if user got the answer correct
 let correct = false;
+//if user gave up
+let gaveup = false;
+//counter of amount of guesses;
+if (localStorage.getItem('counter') === null) {
+    localStorage.setItem('counter', 0);
+}
+//loads all previous guesses in on page load
+if (localStorage.getItem('counter') !== '0') {
+    let count = 0;
+    let interval = setInterval(() => {
+        guess(localStorage.getItem(count + 1));
+        count++;
+        if (count == parseInt(localStorage.getItem('counter'))) {
+            clearInterval(interval);
+        }
+    }, 300);
+}
 //real person's data
 let real;
 //real player's birth
@@ -30,6 +87,7 @@ function getplayerbirth(date) {
     date = [`${date[1]}/${date[2]}/${date[0]}`].join('');
     return date;
 }
+
 
 //list of leagues and teams
 const leagues = ['AL West', 'AL Central', 'AL East', 'NL West', 'NL Central', 'NL East'];
@@ -117,21 +175,6 @@ function exception(id) {
 
 //when player guesses
 function guess(athlete) {
-    for (let i = 0; i < 9; i++) {
-        let div = document.createElement('div');
-        if (i === 0) {
-            div.style.background = 'white';
-        } else {
-            div.style.background = '#b3bdb6';
-        }
-        let inner = document.createElement('div');
-        inner.style.marginTop = '10%';
-        inner.style.width = '80%';
-        inner.style.height = '20%';
-        inner.style.background = 'gray';
-        div.append(inner);
-        data.append(div);
-    }
     async function guessplayer() {
         //array is the 3 words of athlete's name. After splice, array = 3rd word aka index 2
         let array = athlete.split(' ');
@@ -154,6 +197,22 @@ function guess(athlete) {
         guessdata = data.search_player_all.queryResults.row;
         return guessdata;
     }
+    for (let i = 0; i < 9; i++) {
+        let div = document.createElement('div');
+        if (i === 0) {
+            div.style.background = 'white';
+        } else {
+            div.style.background = '#b3bdb6';
+        }
+        let inner = document.createElement('div');
+        inner.style.marginTop = '10%';
+        inner.style.width = '80%';
+        inner.style.height = '20%';
+        inner.style.background = 'gray';
+        div.append(inner);
+        data.append(div);
+    }
+
     guessplayer()
         .then(guessdata => {
             let nless = data.children.length - 9;
@@ -170,7 +229,7 @@ function guess(athlete) {
                 div.classList.add('guess');
                 if (i === 0 && correct === false) {
                     div.style.background = 'white';
-                } else if (div.textContent === real[data.children[i].id]) {
+                } else if (div.textContent == real[data.children[i].id]) {
                     div.style.background = '#1cfc03';
                 } else {
                     div.style.background = '#b3bdb6';
@@ -186,23 +245,31 @@ let person;
 let abc = 'abcdefghijklmnopqrstuvwxyz';
 let randomletter = abc[Math.floor(Math.random() * 26)];
 async function getPlayer() {
-    let response = await fetch(`https://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${randomletter}%25'`);
-    let data = await response.json();
-    data = data.search_player_all.queryResults.row[Math.floor(Math.random() * data.search_player_all.queryResults.row.length)];
-    real = data;
-    person = data.name_display_first_last;
-    birth = getplayerbirth(data.birth_date);
+    if (localStorage.getItem('real') !== null) {
+        real = JSON.parse(localStorage.getItem('real'));
+        person = real.name_display_first_last;
+        birth = getplayerbirth(real.birth_date);
+        face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${real.player_id}/headshot/67/current`;
+    } else {
+        let response = await fetch(`https://lookup-service-prod.mlb.com/json/named.search_player_all.bam?sport_code='mlb'&active_sw='Y'&name_part='${randomletter}%25'`);
+        let data = await response.json();
+        data = data.search_player_all.queryResults.row[Math.floor(Math.random() * data.search_player_all.queryResults.row.length)];
+        real = data;
+        person = data.name_display_first_last;
+        birth = getplayerbirth(data.birth_date);
+    }
 }
-const interval = setInterval(() => {
-    getPlayer()
-        .then(() => {
+getPlayer()
+    .then(() => {
+        const interval = setInterval(() => {
             if (getage(today, birth) < 50) {
                 clearInterval(interval);
             }
+            localStorage.setItem('real', JSON.stringify(real))
             face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${real.player_id}/headshot/67/current`;
-        })
-        .catch(error => console.log(error));
-}, 100)
+        }, 200);
+    })
+    .catch(error => console.log(error));
 
 //when user presses hint
 facereveal.addEventListener('click', () => {
@@ -281,23 +348,40 @@ input.addEventListener('input', () => {
                         div.innerHTML = `<p style="margin-bottom: 1%">Congratulations!</p><img style="width: 70%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
                         document.body.append(div);
                         document.getElementById('again').addEventListener('click', () => {
+                            localStorage.setItem('attempted', parseInt(localStorage.getItem('attempted') - -1));
+                            localStorage.removeItem('real');
+                            for (let i = 0; i < parseInt(localStorage.getItem('counter')); i++) {
+                                localStorage.removeItem(i + 1);
+                            }
+                            localStorage.setItem('counter', 0);
+                            localStorage.setItem('correct', parseInt(localStorage.getItem('correct') - -1));
                             location.reload();
                         })
                     }
                     input.value = '';
                     options.style.display = 'none';
                     clearOptions();
+                    localStorage.setItem('counter', parseInt(localStorage.getItem('counter')) - -1);
+                    localStorage.setItem(localStorage.getItem('counter'), val.textContent);
                     guess(val.textContent);
                 })
             })
         })
         .catch((error) => console.log(error));
 });
-
 document.getElementById('giveup').addEventListener('click', () => {
-    if (document.body.children[document.body.children.length - 1].classList.contains('congrats')) {
-        document.body.children[document.body.children.length - 1].remove(); 
+    if (correct === true) {
+        return;
     }
+    if (gaveup === true) {
+        return;
+    }
+    gaveup = true;
+    localStorage.removeItem('real');
+    for (let i = 0; i < parseInt(localStorage.getItem('counter')); i++) {
+        localStorage.removeItem(i + 1);
+    }
+    localStorage.setItem('counter', 0);
     let div = document.createElement('div');
     div.classList.add('congrats');
     div.innerHTML = `<p style="margin-bottom: 1%; text-align: center;">Player was ${real.name_display_first_last}!</p><img style="width: 70%; height: 70%;" src=${face.src}><button class='button' id='again'>Play Again</button>`;
@@ -306,6 +390,7 @@ document.getElementById('giveup').addEventListener('click', () => {
         div.remove();
     }
     document.getElementById('again').addEventListener('click', () => {
+        localStorage.setItem('attempted', parseInt(localStorage.getItem('attempted') - -1));
         location.reload();
     })
 })
