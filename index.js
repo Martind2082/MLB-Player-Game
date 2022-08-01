@@ -7,6 +7,15 @@ let face = document.getElementById('face');
 let facereveal = document.getElementById('facereveal');
 let data = document.getElementById('data');
 
+//total amount of games played
+if (localStorage.getItem('attempted') === null) {
+    localStorage.setItem('attempted', 1);
+}
+//total amount of correct guesses
+if (localStorage.getItem('correct') === null) {
+    localStorage.setItem('correct', 0);
+}
+
 const stats = document.querySelector('.stats');
 const statistics = document.querySelector('.statistics');
 stats.addEventListener('click', () => {
@@ -46,14 +55,6 @@ var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 today = mm + '/' + dd + '/' + yyyy;
 
-//total amount of games played
-if (localStorage.getItem('attempted') === null) {
-    localStorage.setItem('attempted', 1);
-}
-//total amount of correct guesses
-if (localStorage.getItem('correct') === null) {
-    localStorage.setItem('correct', 0);
-}
 //if user got the answer correct
 let correct = false;
 //if user gave up
