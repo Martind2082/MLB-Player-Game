@@ -246,7 +246,7 @@ let person;
 let abc = 'abcdefghijklmnopqrstuvwxyz';
 let randomletter = abc[Math.floor(Math.random() * 26)];
 async function getPlayer() {
-    if (localStorage.getItem('real') !== null) {
+    if (localStorage.getItem('real') !== null && localStorage.getItem('real') !== 'null') {
         real = JSON.parse(localStorage.getItem('real'));
         person = real.name_display_first_last;
         birth = getplayerbirth(real.birth_date);
@@ -276,6 +276,10 @@ getPlayer()
 facereveal.addEventListener('click', () => {
     hint.style.display = 'none';
     face.style.display = 'block';
+})
+face.addEventListener('click', () => {
+    hint.style.display = 'flex';
+    face.style.display = 'none';
 })
 
 
@@ -356,7 +360,8 @@ input.addEventListener('input', () => {
                             }
                             localStorage.setItem('counter', 0);
                             localStorage.setItem('correct', parseInt(localStorage.getItem('correct') - -1));
-                            location.reload();
+                            resetgame();
+                            div.remove();
                         })
                     }
                     input.value = '';
@@ -371,12 +376,6 @@ input.addEventListener('input', () => {
         .catch((error) => console.log(error));
 });
 document.getElementById('giveup').addEventListener('click', () => {
-    if (correct === true) {
-        return;
-    }
-    if (gaveup === true) {
-        return;
-    }
     gaveup = true;
     localStorage.removeItem('real');
     for (let i = 0; i < parseInt(localStorage.getItem('counter')); i++) {
@@ -392,6 +391,26 @@ document.getElementById('giveup').addEventListener('click', () => {
     }
     document.getElementById('again').addEventListener('click', () => {
         localStorage.setItem('attempted', parseInt(localStorage.getItem('attempted') - -1));
-        location.reload();
+        resetgame();
     })
 })
+
+//reset game when player clicks play again
+function resetgame() {
+    localStorage.setItem('real', null)
+    getPlayer()
+        .then(() => {
+            console.log(localStorage.getItem('real'));
+            const interval = setInterval(() => {
+                if (getage(today, birth) < 50) {
+                    clearInterval(interval);
+                }
+                localStorage.setItem('real', JSON.stringify(real))
+                face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${real.player_id}/headshot/67/current`;
+            }, 200);
+        })
+        .catch(error => console.log(error));
+    document.querySelectorAll('.guess').forEach(guess => guess.remove());
+    gaveup = false;
+    correct = false;
+}
