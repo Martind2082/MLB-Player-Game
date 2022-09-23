@@ -376,6 +376,12 @@ input.addEventListener('input', () => {
         .catch((error) => console.log(error));
 });
 document.getElementById('giveup').addEventListener('click', () => {
+    if (gaveup === true) {
+        return;
+    }
+    if (correct === true) {
+        return;
+    }
     gaveup = true;
     localStorage.removeItem('real');
     for (let i = 0; i < parseInt(localStorage.getItem('counter')); i++) {
@@ -413,4 +419,7 @@ function resetgame() {
     document.querySelectorAll('.guess').forEach(guess => guess.remove());
     gaveup = false;
     correct = false;
+    total.textContent = localStorage.getItem('attempted');
+    wins.textContent = localStorage.getItem('correct');
+    win_rate.textContent = winrate();
 }

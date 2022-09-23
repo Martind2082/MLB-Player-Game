@@ -167,7 +167,7 @@ button:hover {
     height: 70vh;
     background-color: rgb(60, 172, 238);
     position: fixed;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -175,6 +175,7 @@ button:hover {
     justify-content: center;
     align-items: center;
     font-size: 2rem;
+    padding-bottom: 1rem;
 }
 
 .guess {
@@ -272,6 +273,7 @@ button:hover {
     font-weight: bold;
 }
 
+
 @media (max-width: 800px) {
     header {
         height: 250px;
@@ -329,9 +331,22 @@ button:hover {
         top: 100%;
     }
     .congrats {
-        width: 80%;
+        width: 300px;
     }
     .statistics {
         width: 90%;
+    }
+}
+
+
+@media (max-width: 650px){
+    .congrats {
+        width: 250px;
+        z-index: 10;
+    }
+}
+@media (max-width: 400px) {
+    .congrats {
+        width: 300px;
     }
 }
