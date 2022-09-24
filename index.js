@@ -406,13 +406,14 @@ function resetgame() {
     localStorage.setItem('real', null)
     getPlayer()
         .then(() => {
-            console.log(localStorage.getItem('real'));
             const interval = setInterval(() => {
                 if (getage(today, birth) < 50) {
                     clearInterval(interval);
+                    localStorage.setItem('real', JSON.stringify(real))
+                    face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${real.player_id}/headshot/67/current`;
+                } else {
+                    resetgame();
                 }
-                localStorage.setItem('real', JSON.stringify(real))
-                face.src = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${real.player_id}/headshot/67/current`;
             }, 200);
         })
         .catch(error => console.log(error));
